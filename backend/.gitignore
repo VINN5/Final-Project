@@ -1,11 +1,24 @@
-# Dependencies
+# Node modules
 node_modules/
 
-# Logs
-*.log
-
-# Environment
+# Environment variables
 .env
 
-# Build artifacts
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Build files
 dist/
+build/
+
+# Uploads (if you don’t want to track user-uploaded images)
+backend/uploads/
+
+# VSCode settings (optional)
+.vscode/
