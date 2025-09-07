@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Rubik', sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        
+        .login-container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        .login-container h2 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #2c3e50;
+            font-weight: bold;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .login-btn:hover {
+            background-color: #1a252f;
+        }
+        
+        .error-message {
+            color: #e74c3c;
+            text-align: center;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Admin Login</h2>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" required>
+            </div>
+            <button type="submit" class="login-btn">Login</button>
+            <div id="errorMessage" class="error-message"></div>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById("loginForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+            
+            try {
+                const response = await fetch("http://localhost:8080/api/admin/login", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    localStorage.setItem("adminToken", data.token);
+                    window.location.href = "admin.html";
+                } else {
+                    document.getElementById("errorMessage").textContent = data.error || "Login failed";
+                }
+            } catch (error) {
+                console.error("Login error:", error);
+                document.getElementById("errorMessage").textContent = "Network error. Please try again.";
+            }
+        });
+        document.getElementById("loginForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    const errorElement = document.getElementById("errorMessage");
+    
+    // Clear previous errors
+    errorElement.textContent = "";
+    
+    // Basic client-side validation
+    if (!email || !password) {
+        errorElement.textContent = "Please enter both email and password";
+        return;
+    }
+
+    try {
+        const response = await fetch("http://localhost:8080/api/admin/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ 
+                email: email.trim(),
+                password: password
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (!response.ok) {
+            // More detailed error handling
+            console.error('Login failed:', data);
+            errorElement.textContent = data.error || 
+                `Login failed (Status: ${response.status})`;
+            return;
+        }
+        
+        // Successful login
+        localStorage.setItem("adminToken", data.token);
+        
+        // Redirect to admin dashboard
+        window.location.href = "admin.html";
+        
+    } catch (error) {
+        console.error("Login error:", error);
+        errorElement.textContent = "Network error. Please try again.";
+    }
+});
+    </script>
+</body>
+</html>

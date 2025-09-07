@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Matching System - How It Works</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Rubik', sans-serif;
+        }
+        
+        body {
+            background-color: #f4f4f4;
+            line-height: 1.6;
+            color: #2c3e50;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .logo img {
+            height: 50px;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        nav ul li {
+            margin: 0 15px;
+        }
+        
+        nav ul li a {
+            text-decoration: none;
+            color: #2c3e50;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+        
+        nav ul li a:hover {
+            color: #01579B;
+        }
+        
+        /* Hero Section */
+        .hero {
+            padding: 60px 0;
+            background-color: white;
+            margin: 30px auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 1000px;
+        }
+        
+        .hero h1 {
+            color: #01579B;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+        }
+        
+        .hero .content {
+            padding: 0 20px;
+        }
+        
+        .hero p {
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+        
+        .hero strong {
+            color: #01579B;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 40px;
+        }
+        
+        footer a {
+            color: #01579B;
+            text-decoration: none;
+        }
+        
+        footer a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            nav ul li {
+                margin: 5px 0;
+            }
+            
+            .hero {
+                padding: 40px 20px;
+                margin: 20px 10px;
+            }
+            
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header>
+        <div class="container">
+            <div class="logo">
+                <img src="logo.jpeg" alt="Logo">
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="aboutus.html">About Us</a></li>
+                    <li><a href="howitworks.html">How It Works</a></li>
+                    <li><a href="contactus.html">Contact us</a></li>
+                    <li><a href="signin.html">Sign in</a></li>
+                    <li><a href="signup.html">Sign up</a></li>
+                    <li><a href="FAQ.html">FAQ's</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>This is how the system works</h1>
+            <div class="content">
+                <p>
+                    <strong>1. Create Your Account</strong><br>
+                    To get started, you'll need to create an account on our platform. You can sign up as either a Client or a Specialist by providing basic details such as your email, phone number, location, gender, and password. We also require a verification step to ensure your account is secure.
+                </p>
+                <p>
+                    <strong>2. Fill Out Your Profile</strong><br>
+                    <strong>Clients:</strong> After signing up, you'll be asked to complete your profile with a photo and any other relevant details you'd like to share. Once done, you can easily start browsing specialists nearby.<br>
+                    <strong>Specialists:</strong> If you're a beauty professional, you can showcase your expertise by uploading a photo, describing your experience, setting your prices, and listing your services. Your profile will be visible to clients searching for the best specialists in their area.
+                </p>
+                <p>
+                    <strong>3. Find a Match</strong><br>
+                    Clients can search for specialists based on their location, available services, and ratings. The system uses your input to display the most relevant matches, helping you find the best fit for your manicure or pedicure needs. You'll also be able to view:<br>
+                    - Specialists' Prices<br>
+                    - Client Reviews<br>
+                    - Specialist Experience
+                </p>
+                <p>
+                    <strong>4. Book an Appointment</strong><br>
+                    Once you've found the perfect specialist, simply choose a time that works for you and book your appointment directly through the platform. Our secure system makes scheduling and payment quick and hassle-free.
+                </p>
+                <p>
+                    <strong>5. Get Pampered!</strong><br>
+                    Enjoy your professional manicure or pedicure appointment with the peace of mind that comes from knowing you're working with a trusted specialist. All of our professionals are verified and have passed our background checks to ensure a safe, high-quality experience.
+                </p>
+                <p>
+                    <strong>6. Leave a Review</strong><br>
+                    After your appointment, you can share your feedback and rate the specialist on a 5-star scale. Your review helps other clients make informed decisions and allows specialists to grow their reputation.
+                </p>
+                <p>
+                    <strong>7. For Specialists: Grow Your Business</strong><br>
+                    As a specialist, you'll gain exposure to a wider audience of potential clients. With your profile verified and your experience showcased, you'll stand out in the competitive beauty industry. Plus, the review system allows you to continuously improve and attract more customers.
+                </p>
+                <p>
+                    <strong>Why Choose Us?</strong><br>
+                    - Verified Professionals: All specialists go through a thorough verification process to ensure they meet our standards.<br>
+                    - User-Friendly Interface: Our easy-to-use platform allows you to find specialists or clients with just a few clicks.<br>
+                    - Safe and Secure: We prioritize your privacy and security with encrypted communication and secure payments.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Section -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Smart Matching System. All rights reserved. | <a href="#">Privacy Policy</a></p>
+        </div>
+    </footer>
+</body>
+</html>

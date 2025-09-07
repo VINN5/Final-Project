@@ -1,0 +1,2401 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Modern CSS Variables */
+        :root {
+            --primary: #5e72e4;
+            --primary-dark: #4a5bd9;
+            --secondary: #8392ab;
+            --accent: #f5365c;
+            --success: #2dce89;
+            --warning: #fb6340;
+            --danger: #f5365c;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray-100: #f8f9fa;
+            --gray-200: #e9ecef;
+            --gray-300: #dee2e6;
+            --gray-400: #ced4da;
+            --gray-500: #adb5bd;
+            --gray-600: #6c757d;
+            --gray-700: #495057;
+            --gray-800: #343a40;
+            --gray-900: #212529;
+            --border-radius: 12px;
+            --card-shadow: 0 10px 20px rgba(0, 0, 0, 0.05), 0 6px 6px rgba(0, 0, 0, 0.1);
+            --sidebar-width: 280px;
+            --header-height: 70px;
+            --transition: all 0.3s ease;
+            --gradient-primary: linear-gradient(87deg, #5e72e4 0, #825ee4 100%);
+        }
+
+        /* Modern Reset & Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Rubik', sans-serif;
+            background-color: #f5f7fa;
+            color: var(--gray-800);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Modern Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: var(--header-height);
+            background: var(--gradient-primary);
+            color: white;
+            padding: 0 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.15);
+            transition: var(--transition);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+        }
+
+        /* Notification Bell */
+        .notification-bell {
+            position: relative;
+            cursor: pointer;
+            margin-right: 15px;
+        }
+
+        .notification-bell .badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--accent);
+            color: white;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+
+        /* Notification Dropdown */
+        .notification-dropdown {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            width: 350px;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            display: none;
+            overflow: hidden;
+        }
+
+        .notification-dropdown.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .notification-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notification-header h3 {
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        .notification-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .notification-item {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--gray-100);
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            transition: var(--transition);
+        }
+
+        .notification-item:hover {
+            background: var(--gray-100);
+        }
+
+        .notification-item.unread {
+            background: rgba(94, 114, 228, 0.05);
+        }
+
+        .notification-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .notification-icon.info {
+            background: rgba(94, 114, 228, 0.1);
+            color: var(--primary);
+        }
+
+        .notification-icon.success {
+            background: rgba(45, 206, 137, 0.1);
+            color: var(--success);
+        }
+
+        .notification-icon.warning {
+            background: rgba(251, 99, 64, 0.1);
+            color: var(--warning);
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-content p {
+            margin: 0 0 5px;
+            font-size: 0.9rem;
+        }
+
+        .notification-time {
+            font-size: 0.75rem;
+            color: var(--gray-500);
+        }
+
+        .notification-footer {
+            padding: 12px 20px;
+            text-align: center;
+            border-top: 1px solid var(--gray-200);
+        }
+
+        /* Modern Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: white;
+            color: var(--gray-700);
+            padding: 25px 20px;
+            height: calc(100vh - var(--header-height));
+            position: fixed;
+            top: var(--header-height);
+            left: 0;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+            border-right: 1px solid var(--gray-200);
+            transition: var(--transition);
+        }
+
+        .sidebar h2 {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--gray-200);
+            color: var(--gray-800);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar h2::before {
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            content: '\f0b0';
+        }
+
+        .form-group {
+            position: relative;
+            margin-bottom: 25px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 20px 15px 10px;
+            border: 1px solid var(--gray-300);
+            border-radius: var(--border-radius);
+            font-family: 'Rubik', sans-serif;
+            font-size: 0.9rem;
+            transition: var(--transition);
+            background-color: var(--gray-100);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(94, 114, 228, 0.15);
+        }
+
+        .form-label {
+            position: absolute;
+            top: 12px;
+            left: 15px;
+            color: var(--gray-500);
+            transition: all 0.3s ease;
+            pointer-events: none;
+            font-size: 0.9rem;
+        }
+
+        .form-control:focus + .form-label,
+        .form-control:not(:placeholder-shown) + .form-label {
+            top: 5px;
+            left: 15px;
+            font-size: 0.75rem;
+            color: var(--primary);
+        }
+
+        /* Modern Buttons */
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+            font-family: 'Rubik', sans-serif;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(94, 114, 228, 0.3);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #26b97c;
+            transform: translateY(-2px);
+        }
+
+        .btn-small {
+            padding: 8px 12px;
+            font-size: 0.8rem;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: calc(var(--header-height) + 20px) 30px 30px;
+            transition: var(--transition);
+        }
+
+        /* Modern Cards */
+        .section {
+            background: white;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            margin-bottom: 25px;
+            border: 1px solid var(--gray-200);
+        }
+
+        .section h2 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            color: var(--gray-800);
+            font-weight: 600;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--gray-100);
+        }
+
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            border: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: var(--gradient-primary);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 14px 28px rgba(50, 50, 93, 0.1), 0 10px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        .card h3 {
+            margin-top: 0;
+            color: var(--gray-700);
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .card .value {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin: 10px 0;
+            color: var(--primary);
+        }
+
+        /* Specialist Cards */
+        .specialist-card {
+            background: white;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            margin-bottom: 25px;
+            transition: var(--transition);
+            border: 1px solid var(--gray-200);
+            position: relative;
+            border-left: 4px solid var(--primary);
+        }
+
+        .specialist-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .specialist-card h3 {
+            margin-top: 0;
+            color: var(--gray-800);
+            font-size: 1.3rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .specialist-card p {
+            margin: 8px 0;
+            color: var(--gray-600);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .specialist-card p b {
+            font-weight: 500;
+            color: var(--gray-700);
+        }
+
+        .specialist-card .rating {
+            color: #ffc107;
+            font-weight: bold;
+        }
+
+        .status-indicator {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--success);
+        }
+
+        .status-indicator.offline {
+            background: var(--secondary);
+        }
+
+        .status-indicator.busy {
+            background: var(--warning);
+        }
+
+        .action-buttons {
+            margin-top: 20px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        /* Search Box */
+        .search-container {
+            margin-bottom: 20px;
+        }
+
+        .search-box {
+            position: relative;
+            max-width: 500px;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-500);
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 15px 12px 45px;
+            border: 1px solid var(--gray-300);
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            font-family: 'Rubik', sans-serif;
+            font-size: 0.9rem;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(94, 114, 228, 0.1);
+        }
+
+        /* Active Filters */
+        .active-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .filter-chip {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            background: rgba(94, 114, 228, 0.1);
+            color: var(--primary);
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+
+        .filter-chip .remove {
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        /* Badges */
+        .badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .badge-success {
+            background: rgba(45, 206, 137, 0.15);
+            color: var(--success);
+        }
+
+        .badge-warning {
+            background: rgba(251, 99, 64, 0.15);
+            color: var(--warning);
+        }
+
+        .badge-danger {
+            background: rgba(245, 54, 92, 0.15);
+            color: var(--danger);
+        }
+
+        .badge-primary {
+            background: rgba(94, 114, 228, 0.15);
+            color: var(--primary);
+        }
+
+        .badge-secondary {
+            background: rgba(108, 117, 125, 0.15);
+            color: var(--gray-600);
+        }
+
+        .verified-badge {
+            color: var(--success);
+            font-size: 0.9rem;
+        }
+
+        /* Profile Section */
+        .profile-container {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            margin-bottom: 20px;
+        }
+
+        .profile-photo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary);
+            box-shadow: var(--card-shadow);
+        }
+
+        .profile-info h3 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: var(--gray-800);
+            font-weight: 600;
+        }
+
+        .profile-info p {
+            margin: 5px 0 0;
+            color: var(--gray-600);
+        }
+
+        .profile-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .profile-field {
+            margin: 5px 0;
+            padding: 12px 15px;
+            background: var(--gray-100);
+            border-radius: var(--border-radius);
+            border: 1px solid var(--gray-200);
+        }
+
+        .edit-form {
+            margin-top: 15px;
+            padding: 20px;
+            background: var(--gray-100);
+            border-radius: var(--border-radius);
+            border: 1px solid var(--gray-200);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            width: 90%;
+            max-width: 500px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-header {
+            padding: 20px 25px;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: white;
+            transition: var(--transition);
+        }
+
+        .close-btn:hover {
+            transform: scale(1.1);
+        }
+
+        /* Chat Styles */
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 400px;
+        }
+
+        #chatMessages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: var(--gray-100);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        #chatMessages div {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            line-height: 1.4;
+            font-size: 0.9rem;
+            position: relative;
+            word-wrap: break-word;
+        }
+
+        #chatMessages div:nth-child(odd) {
+            background: var(--primary);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        #chatMessages div:nth-child(even) {
+            background: white;
+            color: var(--gray-800);
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .chat-input-container {
+            padding: 15px 20px;
+            background: white;
+            border-top: 1px solid var(--gray-200);
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        #chatInput {
+            flex: 1;
+            padding: 14px 18px;
+            border: 1px solid var(--gray-300);
+            border-radius: 24px;
+            outline: none;
+            font-size: 0.9rem;
+            resize: none;
+            transition: var(--transition);
+            max-height: 120px;
+            font-family: 'Rubik', sans-serif;
+        }
+
+        #chatInput:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(94, 114, 228, 0.15);
+        }
+
+        .send-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .send-btn:hover {
+            background: var(--primary-dark);
+            transform: scale(1.05);
+        }
+
+        /* Previous Works Gallery */
+        .previous-works-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .work-card {
+            background: white;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            transition: var(--transition);
+            border: 1px solid var(--gray-200);
+        }
+
+        .work-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .work-image {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        /* Reviews Section */
+        .review-card {
+            background: white;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            margin-bottom: 15px;
+            border-left: 4px solid var(--primary);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Booking Cards */
+        .booking-card {
+            background: white;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            margin-bottom: 20px;
+            transition: var(--transition);
+            border: 1px solid var(--gray-200);
+        }
+
+        .booking-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Loading Spinner */
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(94, 114, 228, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(-100%);
+                z-index: 999;
+                background: white;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .menu-toggle {
+                display: block;
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                z-index: 1000;
+                background: var(--primary);
+                color: white;
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+                cursor: pointer;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 0 15px;
+            }
+
+            .header h1 {
+                font-size: 1.2rem;
+            }
+
+            .nav-links a {
+                padding: 6px 12px;
+                font-size: 0.8rem;
+            }
+
+            .main-content {
+                padding: calc(var(--header-height) + 15px) 15px 15px;
+            }
+
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .action-buttons .btn {
+                width: 100%;
+            }
+
+            .notification-dropdown {
+                width: 300px;
+                right: -50px;
+            }
+        }
+
+        /* Utility Classes */
+        .text-center {
+            text-align: center;
+        }
+
+        .mb-20 {
+            margin-bottom: 20px;
+        }
+
+        .mt-20 {
+            margin-top: 20px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--gray-100);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--gray-400);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--gray-500);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <div class="header">
+        <h1>Client Dashboard</h1>
+        <div style="display: flex; align-items: center;">
+            <div class="notification-bell" onclick="toggleNotifications()">
+                <i class="fas fa-bell"></i>
+                <span class="badge" id="notificationCount">3</span>
+                
+                <div class="notification-dropdown" id="notificationDropdown">
+                    <div class="notification-header">
+                        <h3>Notifications</h3>
+                        <a href="#" style="font-size: 0.8rem;">Mark all as read</a>
+                    </div>
+                    <div class="notification-list">
+                        <div class="notification-item unread">
+                            <div class="notification-icon info">
+                                <i class="fas fa-calendar-check"></i>
+                            </div>
+                            <div class="notification-content">
+                                <p>Your booking with Sarah Johnson has been confirmed</p>
+                                <span class="notification-time">10 minutes ago</span>
+                            </div>
+                        </div>
+                        <div class="notification-item unread">
+                            <div class="notification-icon success">
+                                <i class="fas fa-comment"></i>
+                            </div>
+                            <div class="notification-content">
+                                <p>New message from Michael Chen</p>
+                                <span class="notification-time">45 minutes ago</span>
+                            </div>
+                        </div>
+                        <div class="notification-item">
+                            <div class="notification-icon warning">
+                                <i class="fas fa-exclamation-circle"></i>
+                            </div>
+                            <div class="notification-content">
+                                <p>Your session starts in 30 minutes</p>
+                                <span class="notification-time">2 hours ago</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="notification-footer">
+                        <a href="#">View all notifications</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="nav-links">
+                <a href="index.html"><i class="fas fa-home"></i> Home</a>
+                <a href="#" onclick="showBookingsSection()"><i class="fas fa-calendar"></i> Bookings</a>
+                <a href="#" onclick="showProfileSection()"><i class="fas fa-user"></i> Profile</a>
+                <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>Filters</h2>
+
+        <div class="form-group">
+            <input type="text" id="locationFilter" class="form-control" placeholder=" ">
+            <label for="locationFilter" class="form-label">Location</label>
+        </div>
+
+        <div class="form-group">
+            <label>Price Range:</label>
+            <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                <input type="number" id="minPrice" class="form-control" placeholder="Min Price" min="0">
+                <input type="number" id="maxPrice" class="form-control" placeholder="Max Price" min="0">
+            </div>
+            <button class="btn btn-primary" onclick="filterByPriceRange()">
+                <i class="fas fa-filter"></i> Filter by Price
+            </button>
+        </div>
+
+        <div class="form-group">
+            <select id="availabilityFilter" class="form-control">
+                <option value="">All Times</option>
+                <option value="morning">Morning (08:00 - 11:00)</option>
+                <option value="afternoon">Afternoon (12:00 - 15:00)</option>
+                <option value="evening">Evening (16:00 - 18:00)</option>
+            </select>
+            <label for="availabilityFilter" class="form-label">Availability</label>
+        </div>
+
+        <div class="form-group">
+            <select id="serviceFilter" class="form-control">
+                <option value="">All Services</option>
+                <option value="Pedicure">Pedicure</option>
+                <option value="Manicure">Manicure</option>
+            </select>
+            <label for="serviceFilter" class="form-label">Services</label>
+        </div>
+
+        <div class="form-group">
+            <input type="number" id="experienceFilter" class="form-control" placeholder=" " min="0">
+            <label for="experienceFilter" class="form-label">Experience (Years)</label>
+        </div>
+
+        <button class="btn btn-primary" onclick="applyFilters()">
+            <i class="fas fa-check"></i> Apply Filters
+        </button>
+        
+        <button class="btn" onclick="clearFilters()" style="background: var(--gray-200); color: var(--gray-700); margin-top: 10px;">
+            <i class="fas fa-times"></i> Clear Filters
+        </button>
+    </div>
+
+    <!-- Mobile Menu Toggle -->
+    <div class="menu-toggle hidden" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Active Filters Display -->
+        <div class="active-filters" id="activeFilters"></div>
+
+        <!-- Specialists Section -->
+        <div class="section" id="specialistsList">
+            <h2>Available Specialists</h2>
+            
+            <!-- Search Box -->
+            <div class="search-container">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="specialistSearch" placeholder="Search specialists by name, service, or location..." onkeyup="searchSpecialists()">
+                </div>
+            </div>
+            
+            <div id="specialistsContainer"></div>
+        </div>
+
+        <!-- Chat Modal -->
+        <div id="chatModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Chat with Specialist</h3>
+                    <button class="close-btn" onclick="closeChatModal()">&times;</button>
+                </div>
+                <div class="chat-container">
+                    <div id="chatMessages"></div>
+                    <div class="chat-input-container">
+                        <textarea id="chatInput" class="form-control" placeholder="Type your message..." rows="1"></textarea>
+                        <button class="send-btn" onclick="sendMessage()">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bookings Section -->
+        <div class="section" id="bookingsSection" style="display: none;">
+            <h2>My Bookings</h2>
+            <div id="bookingsList"></div>
+        </div>
+
+        <!-- Profile Section -->
+        <div class="section" id="profileSection" style="display: none;">
+            <h2>My Profile</h2>
+            <div class="profile-container">
+                <div class="profile-header">
+                    <div class="profile-photo-container">
+                        <img id="profilePhoto" src="https://via.placeholder.com/150" alt="Profile Photo" class="profile-photo">
+                        <div style="margin-top: 15px;">
+                            <button class="btn btn-primary" onclick="document.getElementById('photoUpload').click()">
+                                <i class="fas fa-camera"></i> Change Photo
+                            </button>
+                            <input type="file" id="photoUpload" style="display: none;" accept="image/*" onchange="uploadProfilePhoto()">
+                            <div id="photoUploadStatus" style="margin-top: 8px; font-size: 0.8rem; color: var(--gray-600);"></div>
+                        </div>
+                    </div>
+                    <div class="profile-info">
+                        <h3 id="profileFullName"></h3>
+                        <p>Client</p>
+                    </div>
+                </div>
+
+                <div class="profile-details">
+                    <div class="form-group">
+                        <label>Email:</label>
+                        <p id="profileEmail" class="profile-field"></p>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Phone:</label>
+                        <p id="profilePhone" class="profile-field"></p>
+                        <button class="btn btn-small" onclick="toggleEditField('phone')">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Location:</label>
+                        <p id="profileLocation" class="profile-field"></p>
+                        <button class="btn btn-small" onclick="toggleEditField('location')">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Gender:</label>
+                        <p id="profileGender" class="profile-field"></p>
+                        <button class="btn btn-small" onclick="toggleEditField('gender')">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Edit Forms (hidden by default) -->
+                <div id="editPhoneForm" class="edit-form" style="display: none;">
+                    <input type="text" id="editPhoneInput" class="form-control" placeholder="Enter phone number">
+                    <div style="display: flex; gap: 10px; margin-top: 10px;">
+                        <button class="btn btn-primary" onclick="updateProfileField('phone')">Save</button>
+                        <button class="btn" style="background: var(--gray-200); color: var(--gray-700);" onclick="cancelEdit('phone')">Cancel</button>
+                    </div>
+                </div>
+
+                <div id="editLocationForm" class="edit-form" style="display: none;">
+                    <input type="text" id="editLocationInput" class="form-control" placeholder="Enter location">
+                    <div style="display: flex; gap: 10px; margin-top: 10px;">
+                        <button class="btn btn-primary" onclick="updateProfileField('location')">Save</button>
+                        <button class="btn" style="background: var(--gray-200); color: var(--gray-700);" onclick="cancelEdit('location')">Cancel</button>
+                    </div>
+                </div>
+
+                <div id="editGenderForm" class="edit-form" style="display: none;">
+                    <select id="editGenderInput" class="form-control">
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                        <option value="Prefer not to say">Prefer not to say</option>
+                    </select>
+                    <div style="display: flex; gap: 10px; margin-top: 10px;">
+                        <button class="btn btn-primary" onclick="updateProfileField('gender')">Save</button>
+                        <button class="btn" style="background: var(--gray-200); color: var(--gray-700);" onclick="cancelEdit('gender')">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let activeFilters = {};
+        let currentChatUserId = null;
+        let sessionRefreshInterval;
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const token = localStorage.getItem("token");
+            const role = localStorage.getItem("role");
+            const userId = localStorage.getItem("userId");
+
+            if (!token || role !== "client" || !userId) {
+                window.location.href = "signin.html";
+                return;
+            }
+
+            // Initialize the dashboard
+            fetchSpecialists();
+            showSection("view-profile");
+            fetchLocations();
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            // Add input event listeners for real-time filtering
+            document.getElementById('locationFilter').addEventListener('input', debounce(applyFilters, 300));
+            document.getElementById('experienceFilter').addEventListener('input', debounce(applyFilters, 300));
+            document.getElementById('availabilityFilter').addEventListener('change', applyFilters);
+            document.getElementById('serviceFilter').addEventListener('change', applyFilters);
+            
+            // Chat input enter key support
+            document.getElementById('chatInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+        }
+
+        // Debounce function for performance
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Toggle notification dropdown
+        function toggleNotifications() {
+            const dropdown = document.getElementById('notificationDropdown');
+            dropdown.classList.toggle('active');
+            
+            // Mark notifications as read when dropdown is opened
+            if (dropdown.classList.contains('active')) {
+                document.querySelectorAll('.notification-item.unread').forEach(item => {
+                    item.classList.remove('unread');
+                });
+                document.getElementById('notificationCount').textContent = '0';
+            }
+        }
+
+        // Close notifications when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('notificationDropdown');
+            const bell = document.querySelector('.notification-bell');
+            
+            if (dropdown.classList.contains('active') && !dropdown.contains(event.target) && !bell.contains(event.target)) {
+                dropdown.classList.remove('active');
+            }
+        });
+
+        // Search functionality
+        function searchSpecialists() {
+            const searchTerm = document.getElementById('specialistSearch').value.toLowerCase();
+            const specialistCards = document.querySelectorAll('.specialist-card');
+            
+            specialistCards.forEach(card => {
+                const name = card.querySelector('h3').textContent.toLowerCase();
+                const services = card.querySelector('p:nth-child(3)').textContent.toLowerCase();
+                const location = card.querySelector('p:nth-child(2)').textContent.toLowerCase();
+                
+                if (name.includes(searchTerm) || services.includes(searchTerm) || location.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Update filter display
+        function updateActiveFiltersDisplay() {
+            const container = document.getElementById('activeFilters');
+            container.innerHTML = '';
+            
+            if (Object.keys(activeFilters).length === 0) {
+                return;
+            }
+            
+            for (const [key, value] of Object.entries(activeFilters)) {
+                if (value) {
+                    const chip = document.createElement('div');
+                    chip.className = 'filter-chip';
+                    
+                    let displayText = '';
+                    switch(key) {
+                        case 'location':
+                            displayText = `Location: ${value}`;
+                            break;
+                        case 'minPrice':
+                            displayText = `Min Price: $${value}`;
+                            break;
+                        case 'maxPrice':
+                            displayText = `Max Price: $${value}`;
+                            break;
+                        case 'availability':
+                            displayText = `Availability: ${value}`;
+                            break;
+                        case 'service':
+                            displayText = `Service: ${value}`;
+                            break;
+                        case 'experience':
+                            displayText = `Experience: ${value} years`;
+                            break;
+                    }
+                    
+                    chip.innerHTML = `
+                        ${displayText}
+                        <span class="remove" onclick="removeFilter('${key}')">
+                            <i class="fas fa-times"></i>
+                        </span>
+                    `;
+                    
+                    container.appendChild(chip);
+                }
+            }
+        }
+
+        // Remove a specific filter
+        function removeFilter(filterKey) {
+            delete activeFilters[filterKey];
+            updateActiveFiltersDisplay();
+            applyFilters();
+        }
+
+        // Clear all filters
+        function clearFilters() {
+            document.getElementById('locationFilter').value = '';
+            document.getElementById('minPrice').value = '';
+            document.getElementById('maxPrice').value = '';
+            document.getElementById('availabilityFilter').value = '';
+            document.getElementById('serviceFilter').value = '';
+            document.getElementById('experienceFilter').value = '';
+            
+            activeFilters = {};
+            updateActiveFiltersDisplay();
+            fetchSpecialists();
+        }
+
+        const API_URL = "http://localhost:8080/api";
+
+        async function fetchSpecialists() {
+            try {
+                // Show loading state
+                document.getElementById("specialistsContainer").innerHTML = `
+                    <div style="text-align: center; padding: 40px;">
+                        <div class="loading-spinner"></div>
+                        <p style="margin-top: 15px; color: var(--gray-600);">Loading specialists...</p>
+                    </div>
+                `;
+                
+                const response = await fetch(`${API_URL}/clients/specialists`);
+                const specialists = await response.json();
+
+                // Fetch ratings and verification status for each specialist
+                const specialistsWithData = await Promise.all(specialists.map(async specialist => {
+                    try {
+                        // Fetch ratings
+                        const ratingResponse = await fetch(`${API_URL}/clients/specialists/${specialist.id}/ratings`);
+                        const ratingData = ratingResponse.ok ? await ratingResponse.json() : null;
+
+                        // Fetch verification status
+                        const verificationResponse = await fetch(`${API_URL}/clients/specialists/${specialist.id}/verification-status`);
+                        const verificationData = verificationResponse.ok ? await verificationResponse.json() : { status: 'not_submitted' };
+
+                        return {
+                            ...specialist,
+                            ratingText: ratingData?.avg_rating ?
+                                `${ratingData.avg_rating} ⭐ (${ratingData.total_reviews} reviews)` :
+                                "No ratings yet",
+                            isVerified: verificationData.status === 'approved'
+                        };
+                    } catch (error) {
+                        console.error(`Error fetching data for specialist ${specialist.id}:`, error);
+                        return {
+                            ...specialist,
+                            ratingText: "No ratings yet",
+                            isVerified: false
+                        };
+                    }
+                }));
+
+                displaySpecialists(specialistsWithData);
+            } catch (error) {
+                console.error("Error fetching specialists:", error);
+                document.getElementById("specialistsContainer").innerHTML = `
+                    <div class="error" style="text-align: center; padding: 40px;">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: var(--danger); margin-bottom: 15px;"></i>
+                        <p>Failed to load specialists. Please try again later.</p>
+                        <button class="btn btn-primary" onclick="fetchSpecialists()">
+                            <i class="fas fa-refresh"></i> Try Again
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        function displaySpecialists(data) {
+            const container = document.getElementById("specialistsContainer");
+            container.innerHTML = "";
+
+            // Check if data is an array or an object with a specialists property
+            const specialists = Array.isArray(data) ? data : (data.specialists || []);
+
+            if (specialists.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px;">
+                        <i class="fas fa-search" style="font-size: 3rem; color: var(--gray-400); margin-bottom: 15px;"></i>
+                        <p>No specialists found matching your criteria.</p>
+                        <button class="btn btn-primary" onclick="clearFilters()">
+                            <i class="fas fa-times"></i> Clear Filters
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            specialists.forEach(specialist => {
+                if (!specialist.id) {
+                    console.error("Error: Missing specialist ID", specialist);
+                    return; // Skip if ID is missing
+                }
+
+                const specialistCard = document.createElement("div");
+                specialistCard.classList.add("specialist-card");
+                specialistCard.setAttribute('data-name', specialist.full_name.toLowerCase());
+                specialistCard.setAttribute('data-services', (specialist.services || specialist.service_types || '').toLowerCase());
+                specialistCard.setAttribute('data-location', (specialist.location || '').toLowerCase());
+
+                // Create unique IDs for different sections
+                const sessionsContainerId = `sessionsList-${specialist.id}`;
+                const previousWorksContainerId = `previousWorks-${specialist.id}`;
+                const reviewsContainerId = `reviews-${specialist.id}`;
+
+                // Safely get services and experience, provide default values if undefined
+                const services = specialist.services || specialist.service_types || 'Not specified';
+                const experience = specialist.experience !== undefined ? `${specialist.experience} years` : 'Not specified';
+                const ratingText = specialist.ratingText || (specialist.avg_rating ?
+                    `${parseFloat(specialist.avg_rating).toFixed(1)} ⭐ (${specialist.total_reviews || 0} reviews)` :
+                    "No ratings yet");
+
+                // Random status for demo purposes
+                const statuses = ['online', 'offline', 'busy'];
+                const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
+
+                specialistCard.innerHTML = `
+            <div class="status-indicator ${randomStatus}"></div>
+            <h3>
+                ${specialist.full_name}
+                ${specialist.isVerified ? '<span class="verified-badge"><i class="fas fa-check-circle"></i> </span>' : ''}
+            </h3>
+            <p><i class="fas fa-map-marker-alt"></i> <b>Location</b>: ${specialist.location || 'Not specified'}</p>
+            <p><i class="fas fa-concierge-bell"></i> <b>Services offered</b>: ${services}</p>
+            <p><i class="fas fa-briefcase"></i> <b>Experience</b>: ${experience}</p>
+            <p class="rating"><i class="fas fa-star"></i> <b>Rating:</b> ${ratingText}</p>
+
+            <div class="action-buttons" style="margin-top: 15px; display: flex; gap: 10px;">
+                <button class="btn btn-primary" onclick="toggleSessions(${specialist.id}, '${sessionsContainerId}')">
+                    <i class="fas fa-calendar"></i> View Sessions
+                </button>
+                <button class="btn btn-primary" onclick="togglePreviousWorks(${specialist.id}, '${previousWorksContainerId}')">
+                    <i class="fas fa-images"></i> Previous Works
+                </button>
+                <button class="btn btn-primary" onclick="openChatModal(${specialist.id})">
+                    <i class="fas fa-comments"></i> Chat
+                </button>
+                <button class="btn btn-primary" onclick="toggleReviews(${specialist.id}, 'reviews-${specialist.id}')">
+                    <i class="fas fa-star"></i> Reviews
+                </button>
+            </div>
+
+            <div class="section" id="${sessionsContainerId}" style="display: none; margin-top: 15px;"></div>
+
+            <div id="${previousWorksContainerId}" class="previous-works-section" style="display: none; margin-top: 15px;"></div>
+            
+            <div id="reviews-${specialist.id}" class="reviews-section" style="display: none; margin-top: 15px;">
+                <h4>Reviews</h4>
+                <div id="review-list-${specialist.id}"></div>
+                <button class="btn btn-success" onclick="toggleAddReview(${specialist.id})" style="margin-top: 10px;">
+                    <i class="fas fa-plus"></i> Add Review
+                </button>
+
+                <div id="add-review-${specialist.id}" class="add-review-section" style="display: none; margin-top: 15px;">
+                    <h4>Add Your Review</h4>
+                    <div class="form-group">
+                        <label for="rating-${specialist.id}">Rating:</label>
+                        <select id="rating-${specialist.id}" class="form-control">
+                            <option value="1">1 Star</option>
+                            <option value="2">2 Stars</option>
+                            <option value="3">3 Stars</option>
+                            <option value="4">4 Stars</option>
+                            <option value="5">5 Stars</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="comment-${specialist.id}">Review:</label>
+                        <textarea id="comment-${specialist.id}" class="form-control" placeholder="Write your review..."></textarea>
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="submitReview(${specialist.id})">
+                        <i class="fas fa-check"></i> Submit
+                    </button>
+                </div>
+            </div>
+        `;
+
+                container.appendChild(specialistCard);
+            });
+        }
+
+        // Rest of the functions remain with the same functionality but enhanced UI
+        async function togglePreviousWorks(specialistId, containerId) {
+            const worksContainer = document.getElementById(containerId);
+
+            // Toggle visibility
+            if (worksContainer.style.display === "none") {
+                worksContainer.style.display = "block";
+                worksContainer.innerHTML = `
+                    <div style="text-align: center; padding: 20px;">
+                        <div class="loading-spinner"></div>
+                        <p style="margin-top: 10px; color: var(--gray-600);">Loading previous works...</p>
+                    </div>
+                `;
+
+                try {
+                    const response = await fetch(`http://localhost:8080/api/clients/specialists/${specialistId}/previous-works`);
+                    const data = await response.json();
+
+                    worksContainer.innerHTML = ""; // Clear previous content
+
+                    if (!data.previousWorks || data.previousWorks.length === 0) {
+                        worksContainer.innerHTML = "<p>No previous works available.</p>";
+                        return;
+                    }
+
+                    // Create a gallery of images with prices
+                    const worksGallery = document.createElement("div");
+                    worksGallery.classList.add("previous-works-container");
+
+                    data.previousWorks.forEach(work => {
+                        const workDiv = document.createElement("div");
+                        workDiv.classList.add("work-card");
+                        workDiv.innerHTML = `
+                            <img src="http://localhost:8080${work.image_path}" class="work-image">
+                            <p><strong>Price:</strong> Ksh.${work.price || "Not set"}</p>
+                        `;
+                        worksGallery.appendChild(workDiv);
+                    });
+
+                    worksContainer.appendChild(worksGallery);
+
+                } catch (error) {
+                    console.error("Error fetching previous works:", error);
+                    worksContainer.innerHTML = `<p class="error">Failed to load previous works.</p>`;
+                }
+            } else {
+                worksContainer.style.display = "none";
+            }
+        }
+
+        function openChatModal(specialistId) {
+            currentChatUserId = specialistId;
+            document.getElementById("chatModal").style.display = "flex";
+            fetchMessages(specialistId);
+        }
+
+        function closeChatModal() {
+            document.getElementById("chatModal").style.display = "none";
+        }
+
+        async function toggleReviews(specialistId, containerId) {
+            const reviewsContainer = document.getElementById(containerId);
+
+            if (reviewsContainer.style.display === "none") {
+                reviewsContainer.style.display = "block";
+                document.getElementById(`review-list-${specialistId}`).innerHTML = `
+                    <div style="text-align: center; padding: 20px;">
+                        <div class="loading-spinner"></div>
+                        <p style="margin-top: 10px; color: var(--gray-600);">Loading reviews...</p>
+                    </div>
+                `;
+
+                try {
+                    const response = await fetch(`${API_URL}/clients/specialists/${specialistId}/reviews`);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const data = await response.json();
+
+                    const reviewList = document.getElementById(`review-list-${specialistId}`);
+                    reviewList.innerHTML = "";
+
+                    if (!data.reviews || data.reviews.length === 0) {
+                        reviewList.innerHTML = "<p>No reviews available.</p>";
+                        return;
+                    }
+
+                    data.reviews.forEach(review => {
+                        const reviewDiv = document.createElement("div");
+                        reviewDiv.classList.add("review-card");
+
+                        // Safely parse the date
+                        let reviewDate;
+                        try {
+                            reviewDate = new Date(review.created_at || review.timestamp);
+                            if (isNaN(reviewDate.getTime())) {
+                                throw new Error("Invalid date");
+                            }
+                        } catch (e) {
+                            console.error("Invalid date format:", review.created_at);
+                            reviewDate = new Date(); // Fallback to current date
+                        }
+
+                        const formattedDate = reviewDate.toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        });
+
+                        reviewDiv.innerHTML = `
+                    <p><strong>${review.client_name}</strong></p>
+                    <p>${review.review}</p>
+                    <p class="rating">${'⭐'.repeat(review.rating)}</p>
+                    <small>${formattedDate}</small>
+                `;
+                        reviewList.appendChild(reviewDiv);
+                    });
+
+                } catch (error) {
+                    console.error("Error fetching reviews:", error);
+                    reviewsContainer.innerHTML = `<p class="error">Error loading reviews: ${error.message}</p>`;
+                }
+            } else {
+                reviewsContainer.style.display = "none";
+            }
+        }
+
+        function toggleAddReview(specialistId) {
+            const addReviewSection = document.getElementById(`add-review-${specialistId}`);
+            addReviewSection.style.display = addReviewSection.style.display === "none" ? "block" : "none";
+        }
+
+        async function fetchMessages(specialistId) {
+            try {
+                const response = await fetch(`http://localhost:8080/api/clients/messages?other_user_id=${specialistId}`, {
+                    headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` }
+                });
+
+                const data = await response.json();
+                const chatMessages = document.getElementById("chatMessages");
+                chatMessages.innerHTML = "";
+
+                if (!data || !Array.isArray(data)) {
+                    console.error("Error: Invalid response format", data);
+                    chatMessages.innerHTML = "<p>No messages found.</p>";
+                    return;
+                }
+
+                if (data.length === 0) {
+                    chatMessages.innerHTML = "<p>No messages yet. Start a conversation!</p>";
+                }
+
+                data.forEach(message => {
+                    const messageDiv = document.createElement("div");
+                    messageDiv.textContent = `${message.sender_id === currentChatUserId ? "Specialist" : "You"}: ${message.message}`;
+                    chatMessages.appendChild(messageDiv);
+                });
+            } catch (error) {
+                console.error("Error fetching messages:", error);
+            }
+        }
+
+        async function sendMessage() {
+            const message = document.getElementById("chatInput").value;
+
+            if (!message.trim()) return;
+
+            try {
+                await fetch("http://localhost:8080/api/clients/send-message", {
+                    method: "POST",
+                    headers: {
+                        "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ receiver_id: currentChatUserId, message })
+                });
+
+                document.getElementById("chatInput").value = "";
+                fetchMessages(currentChatUserId);
+            } catch (error) {
+                console.error("Error sending message:", error);
+            }
+        }
+
+        async function toggleSessions(specialistId, sessionsContainerId) {
+            const sessionsContainer = document.getElementById(sessionsContainerId);
+
+            // Toggle visibility of the sessions container
+            if (sessionsContainer.style.display === "none") {
+                // If hidden, fetch and show sessions
+                await fetchSessions(specialistId, sessionsContainerId);
+                sessionsContainer.style.display = "block";
+                startSessionRefresh(specialistId, sessionsContainerId);
+            } else {
+                // If visible, hide sessions
+                sessionsContainer.style.display = "none";
+                stopSessionRefresh();
+            }
+        }
+
+        async function fetchSessions(specialistId, sessionsContainerId) {
+            if (!specialistId) {
+                console.error("❌ Error: Specialist ID is missing.");
+                return;
+            }
+
+            console.log(`Fetching sessions for Specialist ID: ${specialistId}`);
+
+            try {
+                const response = await fetch(`${API_URL}/clients/sessions/${specialistId}`);
+                const data = await response.json();
+
+                const sessionsList = document.getElementById(sessionsContainerId);
+                if (!sessionsList) {
+                    console.error("❌ Error: sessionsList element not found.");
+                    return;
+                }
+
+                sessionsList.innerHTML = ""; // Clear previous data
+
+                if (!data.sessions || data.sessions.length === 0) {
+                    sessionsList.innerHTML = "<p>No available sessions at the moment.</p>";
+                    return;
+                }
+
+                // Filter out sessions that have already passed (client-side additional check)
+                const now = new Date();
+                const availableSessions = data.sessions.filter(session => {
+                    const sessionStart = new Date(session.start_time);
+                    return sessionStart > now;
+                });
+
+                if (availableSessions.length === 0) {
+                    sessionsList.innerHTML = "<p>No upcoming available sessions.</p>";
+                    return;
+                }
+
+                availableSessions.forEach(session => {
+                    // Create a container for each session
+                    const sessionContainer = document.createElement("div");
+                    sessionContainer.classList.add("session-container");
+
+                    // Parse the combined DateTime string
+                    const startTime = new Date(session.start_time);
+                    const endTime = new Date(session.end_time);
+
+                    // Format the DateTime for display
+                    const formattedStartTime = startTime.toLocaleString();
+                    const formattedEndTime = endTime.toLocaleString();
+
+                    // Add session details to the container
+                    sessionContainer.innerHTML = `
+                <h4>Session Details</h4>
+                <p><strong>Start Time:</strong> ${formattedStartTime}</p>
+                <p><strong>End Time:</strong> ${formattedEndTime}</p>
+                <p><strong>Status:</strong> ${session.status}</p>
+                <button class="btn btn-success" onclick="bookSession(${session.id})">
+                    <i class="fas fa-calendar-plus"></i> Book Now
+                </button>
+            `;
+
+                    // Append the session container to the list
+                    sessionsList.appendChild(sessionContainer);
+                });
+            } catch (error) {
+                console.error("Error fetching sessions:", error);
+            }
+        }
+
+        function startSessionRefresh(specialistId, containerId) {
+            // Refresh every 30 seconds
+            sessionRefreshInterval = setInterval(() => {
+                fetchSessions(specialistId, containerId);
+            }, 30000);
+        }
+
+        function stopSessionRefresh() {
+            if (sessionRefreshInterval) {
+                clearInterval(sessionRefreshInterval);
+            }
+        }
+
+        async function applyFilters() {
+            const location = document.getElementById("locationFilter").value;
+            const availability = document.getElementById("availabilityFilter").value;
+            const service = document.getElementById("serviceFilter").value;
+            const experience = document.getElementById("experienceFilter").value;
+            const minPrice = document.getElementById("minPrice").value;
+            const maxPrice = document.getElementById("maxPrice").value;
+
+            // Update active filters object
+            activeFilters = {
+                location: location || null,
+                minPrice: minPrice || null,
+                maxPrice: maxPrice || null,
+                availability: availability || null,
+                service: service || null,
+                experience: experience || null
+            };
+            
+            updateActiveFiltersDisplay();
+
+            let queryParams = [];
+
+            if (location) queryParams.push(`location=${encodeURIComponent(location)}`);
+            if (availability) queryParams.push(`availability=${encodeURIComponent(availability)}`);
+            if (service) queryParams.push(`services=${encodeURIComponent(service)}`);
+            if (experience) queryParams.push(`experience=${encodeURIComponent(experience)}`);
+            if (minPrice && maxPrice) {
+                queryParams.push(`price_min=${encodeURIComponent(minPrice)}`);
+                queryParams.push(`price_max=${encodeURIComponent(maxPrice)}`);
+            }
+
+            const queryString = queryParams.length > 0 ? `?${queryParams.join('&')}` : '';
+
+            try {
+                const response = await fetch(`${API_URL}/clients/specialists${queryString}`);
+                const data = await response.json();
+
+                if (data.message) {
+                    document.getElementById("specialistsList").innerHTML = `<p>${data.message}</p>`;
+                    return;
+                }
+
+                displaySpecialists(data);
+            } catch (error) {
+                console.error("Error applying filters:", error);
+            }
+        }
+
+        async function fetchLocations() {
+            try {
+                const response = await fetch("http://localhost:8080/api/clients/specialists/locations");
+                const locations = await response.json();
+
+                const locationFilter = document.getElementById("locationFilter");
+                locationFilter.innerHTML = ``;
+
+                locations.forEach(loc => {
+                    const option = document.createElement('option');
+                    option.value = loc.location;
+                    option.textContent = loc.location;
+                    locationFilter.appendChild(option);
+                });
+            } catch (error) {
+                console.error("Error fetching locations:", error);
+            }
+        }
+
+        async function filterByPriceRange() {
+            const minPrice = document.getElementById("minPrice").value;
+            const maxPrice = document.getElementById("maxPrice").value;
+
+            // Update active filters
+            activeFilters.minPrice = minPrice || null;
+            activeFilters.maxPrice = maxPrice || null;
+            updateActiveFiltersDisplay();
+
+            // Validate inputs
+            if (minPrice && isNaN(parseFloat(minPrice))) {
+                showError("Minimum price must be a valid number");
+                return;
+            }
+
+            if (maxPrice && isNaN(parseFloat(maxPrice))) {
+                showError("Maximum price must be a valid number");
+                return;
+            }
+
+            if (minPrice && maxPrice && parseFloat(minPrice) > parseFloat(maxPrice)) {
+                showError("Minimum price cannot be greater than maximum price");
+                return;
+            }
+
+            try {
+                const url = new URL(`${API_URL}/clients/specialists/by-price-range`);
+                url.searchParams.append('min_price', minPrice || '0');
+                if (maxPrice) url.searchParams.append('max_price', maxPrice);
+
+                const response = await fetch(url);
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.message || 'Failed to filter specialists');
+                }
+
+                const data = await response.json();
+
+                if (data.specialists && data.specialists.length === 0) {
+                    return showNoResults(
+                        data.message || `No specialists found between ${minPrice || 0} and ${maxPrice || 'any'} price range`,
+                        data.price_range || {
+                            min: minPrice || 0,
+                            max: maxPrice || 'unlimited'
+                        }
+                    );
+                }
+
+                // Ensure we're working with the specialists array
+                const specialists = data.specialists || data;
+
+                // Fetch additional data for each specialist if needed
+                const specialistsWithData = await Promise.all(specialists.map(async specialist => {
+                    try {
+                        // Fetch ratings if not already included
+                        const ratingResponse = await fetch(`${API_URL}/clients/specialists/${specialist.id}/ratings`);
+                        const ratingData = ratingResponse.ok ? await ratingResponse.json() : null;
+
+                        // Fetch verification status
+                        const verificationResponse = await fetch(`${API_URL}/clients/specialists/${specialist.id}/verification-status`);
+                        const verificationData = verificationResponse.ok ? await verificationResponse.json() : { status: 'not_submitted' };
+
+                        return {
+                            ...specialist,
+                            services: specialist.services || specialist.service_types, // Handle different property names
+                            ratingText: ratingData?.avg_rating ?
+                                `${ratingData.avg_rating} ⭐ (${ratingData.total_reviews} reviews)` :
+                                "No ratings yet",
+                            isVerified: verificationData.status === 'approved'
+                        };
+                    } catch (error) {
+                        console.error(`Error fetching data for specialist ${specialist.id}:`, error);
+                        return {
+                            ...specialist,
+                            services: specialist.services || specialist.service_types || 'Not specified',
+                            ratingText: "No ratings yet",
+                            isVerified: false
+                        };
+                    }
+                }));
+
+                displaySpecialists(specialistsWithData);
+            } catch (error) {
+                console.error("Filter error:", error);
+                showError(error.message || "An unexpected error occurred while filtering");
+            }
+        }
+
+        // Helper functions
+        function showNoResults(message, priceRange) {
+            document.getElementById("specialistsList").innerHTML = `
+        <div class="info">
+            <p>${message}</p>
+            <p>Price range: ${priceRange.min} - ${priceRange.max}</p>
+        </div>`;
+        }
+
+        function showError(message) {
+            document.getElementById("specialistsList").innerHTML = `
+        <div class="error">
+            <p>${message}</p>
+            <p>Please try different filters</p>
+        </div>`;
+        }
+
+        async function bookSession(sessionId) {
+            const token = localStorage.getItem("token");
+            if (!token) {
+                alert("Please log in to book a session.");
+                window.location.href = "signin.html";
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/clients/book-session`, {
+                    method: "POST",
+                    headers: {
+                        "Authorization": `Bearer ${token}`,
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ sessionId })
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    alert(data.message);
+                    fetchSessions(); // Refresh the session list
+                } else {
+                    alert(data.error || "Failed to book session.");
+                }
+            } catch (error) {
+                console.error("Error booking session:", error);
+            }
+        }
+
+        async function submitReview(specialistId) {
+            // Get the form elements
+            const ratingElement = document.getElementById(`rating-${specialistId}`);
+            const commentElement = document.getElementById(`comment-${specialistId}`);
+
+            // Validate elements exist
+            if (!ratingElement || !commentElement) {
+                console.error("Review form elements not found");
+                alert("Error: Review form not properly loaded. Please try again.");
+                return;
+            }
+
+            // Get and validate values
+            const rating = ratingElement.value;
+            const comment = commentElement.value.trim();
+
+            if (!rating || !comment) {
+                alert("Please provide both a rating and a review comment.");
+                return;
+            }
+
+            // Get token from localStorage
+            const token = localStorage.getItem("token");
+            if (!token) {
+                alert("Please log in to submit a review.");
+                window.location.href = "signin.html";
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/clients/add-review`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        specialist_id: specialistId,
+                        rating: parseInt(rating),
+                        review: comment
+                    })
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.error || "Failed to submit review");
+                }
+
+                const result = await response.json();
+
+                alert("Review submitted successfully!");
+                // Refresh the reviews section
+                toggleReviews(specialistId, `reviews-${specialistId}`);
+                // Hide the add review form
+                document.getElementById(`add-review-${specialistId}`).style.display = "none";
+                // Clear the form
+                commentElement.value = "";
+                ratingElement.value = "5"; // Reset to default rating
+            } catch (error) {
+                console.error("Error submitting review:", error);
+                alert(error.message || "An error occurred while submitting your review.");
+
+                // If token is invalid, redirect to login
+                if (error.message.includes("token") || error.message.includes("auth")) {
+                    localStorage.removeItem("token");
+                    window.location.href = "signin.html";
+                }
+            }
+        }
+
+        // Show profile section
+        function showProfileSection() {
+            document.getElementById('specialistsList').style.display = 'none';
+            document.getElementById('bookingsSection').style.display = 'none';
+            document.getElementById('profileSection').style.display = 'block';
+            fetchClientProfile();
+        }
+
+        function showBookingsSection() {
+            document.getElementById('specialistsList').style.display = 'none';
+            document.getElementById('profileSection').style.display = 'none';
+            document.getElementById('bookingsSection').style.display = 'block';
+            fetchClientBookings();
+        }
+
+        async function fetchClientBookings() {
+            const container = document.getElementById("bookingsList");
+            container.innerHTML = "<p>Loading bookings...</p>";
+
+            try {
+                const response = await fetch(`${API_URL}/clients/bookings`, {
+                    headers: {
+                        "Authorization": `Bearer ${localStorage.getItem("token")}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const bookings = await response.json();
+                displayBookings(bookings);
+            } catch (error) {
+                console.error("Error fetching bookings:", error);
+                container.innerHTML = `<p class="error">Failed to load bookings. Please try again later.</p>`;
+            }
+        }
+
+        function displayBookings(bookings) {
+            const container = document.getElementById("bookingsList");
+            container.innerHTML = "";
+
+            if (!bookings || bookings.length === 0) {
+                container.innerHTML = "<p>You have no bookings yet.</p>";
+                return;
+            }
+
+            bookings.forEach(booking => {
+                const bookingCard = document.createElement("div");
+                bookingCard.className = "booking-card";
+
+                // Parse date and time properly
+                const startTime = new Date(booking.start_time);
+                const endTime = new Date(booking.end_time);
+                const bookingDate = new Date(booking.date);
+
+                // Format date and time for display
+                const options = {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                };
+
+                bookingCard.innerHTML = `
+            <h3>Session with ${booking.specialist_name}</h3>
+            <p><strong>Date:</strong> ${bookingDate.toLocaleDateString()}</p>
+            <p><strong>Time:</strong> ${startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - ${endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
+            <p><strong>Status:</strong> <span class="badge ${getStatusBadgeClass(booking.status)}">${booking.status}</span></p>
+            <div class="booking-actions">
+                ${booking.status.toLowerCase() === 'pending' ? `
+                    <button class="btn btn-danger" onclick="cancelBooking(${booking.id})">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                ` : ''}
+            </div>
+        `;
+
+                container.appendChild(bookingCard);
+            });
+        }
+
+        // Enhanced status badge classification
+        function getStatusBadgeClass(status) {
+            switch (status.toLowerCase()) {
+                case 'accepted': return 'badge-success';
+                case 'rejected': return 'badge-danger';
+                case 'pending': return 'badge-warning';
+                case 'completed': return 'badge-primary';
+                case 'cancelled': return 'badge-secondary';
+                default: return 'badge-secondary';
+            }
+        }
+
+        // Cancel booking
+        async function cancelBooking(bookingId) {
+            if (!confirm("Are you sure you want to cancel this booking?")) return;
+
+            try {
+                const response = await fetch(`${API_URL}/clients/cancel-booking`, {
+                    method: "POST",
+                    headers: {
+                        "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ bookingId })
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    alert(result.message);
+                    fetchClientBookings(); // Refresh the list
+                } else {
+                    alert(result.error || "Failed to cancel booking");
+                }
+            } catch (error) {
+                console.error("Error cancelling booking:", error);
+                alert("Failed to cancel booking");
+            }
+        }
+
+        // Update the existing bookSession function
+        async function bookSession(sessionId) {
+            const token = localStorage.getItem("token");
+            if (!token) {
+                alert("Please log in to book a session.");
+                window.location.href = "signin.html";
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/clients/book-session`, {
+                    method: "POST",
+                    headers: {
+                        "Authorization": `Bearer ${token}`,
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ sessionId })
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    alert(data.message);
+                    // Refresh both sessions and bookings
+                    fetchSessions();
+                    fetchClientBookings();
+                } else {
+                    alert(data.error || "Failed to book session.");
+                }
+            } catch (error) {
+                console.error("Error booking session:", error);
+                alert("Failed to book session.");
+            }
+        }
+
+        // Fetch client profile
+        async function fetchClientProfile() {
+            try {
+                const response = await fetch(`${API_URL}/clients/details`, {
+                    headers: {
+                        "Authorization": `Bearer ${localStorage.getItem("token")}`
+                    }
+                });
+
+                const profile = await response.json();
+
+                // Update profile fields
+                document.getElementById('profileFullName').textContent = `${profile.full_name}`;
+                document.getElementById('profileEmail').textContent = profile.email;
+                document.getElementById('profilePhone').textContent = profile.phone || 'Not set';
+                document.getElementById('profileLocation').textContent = profile.location || 'Not set';
+                document.getElementById('profileGender').textContent = profile.gender || 'Not set';
+
+                // Update profile photo if available
+                if (profile.profile_photo) {
+                    document.getElementById('profilePhoto').src = `http://localhost:8080${profile.profile_photo}`;
+                }
+            } catch (error) {
+                console.error("Error fetching profile:", error);
+            }
+        }
+
+        async function uploadProfilePhoto() {
+            const fileInput = document.getElementById('photoUpload');
+            const file = fileInput.files[0];
+
+            if (!file) {
+                document.getElementById('photoUploadStatus').textContent = "No file selected";
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('profile_photo', file);
+            formData.append('phone', document.getElementById('profilePhone').textContent);
+            formData.append('location', document.getElementById('profileLocation').textContent);
+            formData.append('gender', document.getElementById('profileGender').textContent);
+
+            try {
+                document.getElementById('photoUploadStatus').textContent = "Uploading...";
+
+                const response = await fetch(`${API_URL}/clients/update-profile`, {
+                    method: "POST",
+                    headers: {
+                        "Authorization": `Bearer ${localStorage.getItem("token")}`
+                    },
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    document.getElementById('photoUploadStatus').textContent = "Photo uploaded successfully!";
+                    if (result.profilePhoto) {
+                        document.getElementById('profilePhoto').src = `http://localhost:8080${result.profilePhoto}`;
+                    }
+                } else {
+                    document.getElementById('photoUploadStatus').textContent = result.error || "Upload failed";
+                }
+            } catch (error) {
+                console.error("Upload error:", error);
+                document.getElementById('photoUploadStatus').textContent = "Upload failed";
+            }
+        }
+
+        // Helper functions for editing profile fields
+        function toggleEditField(field) {
+            document.getElementById(`profile${field.charAt(0).toUpperCase() + field.slice(1)}`).style.display = 'none';
+            document.getElementById(`edit${field.charAt(0).toUpperCase() + field.slice(1)}Form`).style.display = 'block';
+
+            // Set current value in input
+            const currentValue = document.getElementById(`profile${field.charAt(0).toUpperCase() + field.slice(1)}`).textContent;
+            document.getElementById(`edit${field.charAt(0).toUpperCase() + field.slice(1)}Input`).value = currentValue === 'Not set' ? '' : currentValue;
+        }
+
+        function cancelEdit(field) {
+            document.getElementById(`profile${field.charAt(0).toUpperCase() + field.slice(1)}`).style.display = 'block';
+            document.getElementById(`edit${field.charAt(0).toUpperCase() + field.slice(1)}Form`).style.display = 'none';
+        }
+
+        async function updateProfileField(field) {
+            const value = document.getElementById(`edit${field.charAt(0).toUpperCase() + field.slice(1)}Input`).value;
+
+            try {
+                const formData = new FormData();
+                formData.append(field, value);
+
+                const response = await fetch(`${API_URL}/clients/update-profile`, {
+                    method: "POST",
+                    headers: {
+                        "Authorization": `Bearer ${localStorage.getItem("token")}`
+                    },
+                    body: formData
+                });
+
+                if (response.ok) {
+                    document.getElementById(`profile${field.charAt(0).toUpperCase() + field.slice(1)}`).textContent = value || 'Not set';
+                    cancelEdit(field);
+                } else {
+                    const error = await response.json();
+                    alert(error.error || "Update failed");
+                }
+            } catch (error) {
+                console.error("Update error:", error);
+                alert("Update failed");
+            }
+        }
+
+        function logout() {
+            // Clear authentication/session data
+            localStorage.removeItem("token");
+            localStorage.removeItem("role");
+            localStorage.removeItem("userId");
+
+            // Redirect to sign-in page
+            window.location.href = "signin.html";
+        }
+
+        // Toggle sidebar on mobile
+        function toggleSidebar() {
+            document.querySelector('.sidebar').classList.toggle('active');
+        }
+    </script>
+</body>
+
+</html>
